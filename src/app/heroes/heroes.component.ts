@@ -24,7 +24,9 @@ export class HeroesComponent implements OnInit, OnDestroy {
   // }
   getHeroes(): void {
     // this.heroes = this.heroService.getHeroes();
-    this.heroService.getHeroes().subscribe(heroes => (this.heroes = heroes));
+    this.heroService
+      .getHeroes()
+      .subscribe(heroes => (this.heroes = [...heroes]));
   }
   add(name: string): void {
     name = name.trim();
@@ -32,12 +34,16 @@ export class HeroesComponent implements OnInit, OnDestroy {
       return;
     }
     this.heroService.addHero({ name } as Hero).subscribe(hero => {
-      this.heroes.push(hero);
+      this.heroes = [...this.heroes, hero];
     });
   }
   delate(hero: Hero): void {
-    this.heroes = this.heroes.filter(h => h !== hero);
-    this.heroService.deleteHero(hero).subscribe();
+    // remove it before the data store was updated(faster response)
+    // this.heroes = this.heroes.filter(h => h !== hero);
+    this.heroService.deleteHero(hero).subscribe(deletedHero => {
+      // remove it after the deletion operation success (safer?)
+      this.heroes = this.heroes.filter(h => h !== hero);
+    });
   }
   ngOnDestroy(): void {}
 }
