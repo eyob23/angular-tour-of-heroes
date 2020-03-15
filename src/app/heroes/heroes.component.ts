@@ -9,24 +9,27 @@ import { MessagesService } from './../messages.service';
   styleUrls: ['./heroes.component.css']
 })
 export class HeroesComponent implements OnInit, OnDestroy {
-  heroes: Hero[];
+  private heroes: Hero[];
   constructor(
     private heroService: HeroService,
     private messageService: MessagesService
   ) {}
   ngOnInit(): void {
-    this.getHeroes();
+    this.intHeroes();
   }
   // selectedHero: Hero;
   // onSelect(hero: Hero): void {
   //   this.selectedHero = hero;
   //   this.messageService.add(`HeroService: Selected hero id=${hero.id}`);
   // }
-  getHeroes(): void {
+  intHeroes(): void {
     // this.heroes = this.heroService.getHeroes();
     this.heroService
       .getHeroes()
       .subscribe(heroes => (this.heroes = [...heroes]));
+  }
+  getHeroes(): Hero[] {
+    return [...this.heroes];
   }
   add(name: string): void {
     name = name.trim();
